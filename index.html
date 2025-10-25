@@ -1,0 +1,3113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Ledger | Your Personal Carbon Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --accent: #8b5cf6;
+            --light: #f0fdf4;
+            --dark: #064e3b;
+            --gray: #6b7280;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .login-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+        }
+        
+        .login-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 20px 0 0 20px;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .login-form {
+            width: 80%;
+            max-width: 400px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .tech-team {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .institution {
+            font-size: 14px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        
+        .tagline {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            outline: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .auto-login-timer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+        }
+        
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 220px;
+            padding: 10px 0;
+            margin-top: 10px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .profile-dropdown.active {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8fafc;
+        }
+        
+        .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background-color: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .nav-tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        
+        .nav-tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        /* Dashboard Overview */
+        .net-carbon-score {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .score-value {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .score-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .score-change {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+        
+        .stat-info {
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .chart-container {
+            height: 300px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        /* Ledger View */
+        .ledger-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .debit-ledger, .credit-ledger {
+            flex: 1;
+        }
+        
+        .ledger-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .ledger-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .ledger-amount {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .debit-ledger .ledger-amount {
+            color: var(--danger);
+        }
+        
+        .credit-ledger .ledger-amount {
+            color: var(--success);
+        }
+        
+        .transaction-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            background-color: #f1f5f9;
+        }
+        
+        .transaction-details {
+            flex: 1;
+        }
+        
+        .transaction-name {
+            font-weight: 500;
+        }
+        
+        .transaction-date {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .transaction-amount {
+            font-weight: 600;
+        }
+        
+        /* AI Recommendations */
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .recommendation-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background-color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: var(--primary);
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .recommendation-impact {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--light);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        
+        .recommendation-desc {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        /* Data Sources */
+        .data-sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .data-source-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .data-source-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        .data-source-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .data-source-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .data-source-status {
+            font-size: 14px;
+            color: var(--success);
+            font-weight: 500;
+        }
+        
+        /* Reports */
+        .report-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .report-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        /* Profile Page */
+        .profile-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .profile-sidebar {
+            width: 300px;
+        }
+        
+        .profile-main {
+            flex: 1;
+        }
+        
+        .profile-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            margin: 0 auto 20px;
+            background-size: cover;
+            background-position: center;
+            border: 4px solid var(--light);
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .profile-bio {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        
+        .profile-stat {
+            text-align: center;
+        }
+        
+        .profile-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .profile-stat-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group-half {
+            flex: 1;
+        }
+        
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .language-option {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .language-option.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-heading {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .footer-links a {
+            display: block;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .contact-info {
+            margin-top: 15px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+        
+        .contact-item i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+            margin-top: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .success-modal.active {
+            display: flex;
+        }
+        
+        .success-content {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .success-icon {
+            font-size: 64px;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .success-message {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 25px;
+        }
+        
+        /* AI Recommendation Modal */
+        .recommendation-modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .app-card {
+            background-color: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .app-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .app-desc {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        /* Activity List Modal */
+        .activity-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+        
+        .activity-item:hover {
+            background-color: #f8fafc;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            background-color: #f1f5f9;
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .activity-date {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .activity-amount {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        /* Language Section */
+        .language-section {
+            margin-top: 30px;
+        }
+        
+        .language-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        /* Google Fit Integration */
+        .google-fit-section {
+            margin-top: 30px;
+        }
+        
+        .google-fit-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .fit-status {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .fit-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .fit-info {
+            flex: 1;
+        }
+        
+        .fit-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .fit-stat {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .fit-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .fit-stat-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        /* Report Info Section */
+        .report-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .report-info-item {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .report-info-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+            
+            .login-right {
+                border-radius: 20px 20px 0 0;
+                padding: 20px;
+            }
+            
+            .ledger-container {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-container {
+                flex-direction: column;
+            }
+            
+            .profile-sidebar {
+                width: 100%;
+            }
+            
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .user-menu {
+                align-self: flex-end;
+                margin-top: -50px;
+            }
+            
+            .nav-tabs {
+                padding: 0 10px;
+            }
+            
+            .nav-tab {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .report-info {
+                flex-direction: column;
+            }
+            
+            .fit-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .login-left, .login-right {
+                padding: 20px;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
+            
+            .score-value {
+                font-size: 48px;
+            }
+            
+            .fit-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="login-page">
+        <div class="login-left">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-seedling"></i></div>
+                <div class="logo-text">Carbon Ledger</div>
+            </div>
+            <div class="tech-team">HackHills</div>
+            <div class="institution">NIT Manipur</div>
+            <h1 class="tagline">Your Personal Carbon Portfolio Manager</h1>
+            <p>Automatically track, manage, and reduce your carbon footprint with zero effort.</p>
+        </div>
+        <div class="login-right">
+            <div class="login-form">
+                <h2>Welcome Back</h2>
+                <p style="margin-bottom: 30px; color: var(--gray);">Sign in to your Carbon Ledger account</p>
+                
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Email Address" id="email" value="richa.kumari@nitmanipur.ac.in">
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Password" id="password" value="••••••••">
+                </div>
+                
+                <button class="btn btn-block" id="login-btn">Sign In</button>
+                
+                <div class="auto-login-timer" id="auto-login-timer">
+                    Auto-login with demo account in <span id="countdown">11</span> seconds
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon"><i class="fas fa-seedling"></i></div>
+                        <div class="logo-text" id="logo-text">Carbon Ledger</div>
+                    </div>
+                    
+                    <div class="user-menu" id="user-menu">
+                        <div class="user-avatar" id="user-avatar">RK</div>
+                        <div>
+                            <div style="font-weight: 600;" id="user-name">Richa Kumari</div>
+                            <div style="font-size: 14px; color: var(--gray);" id="user-status">Net Positive: +42 kg CO₂e</div>
+                        </div>
+                        <div class="profile-dropdown" id="profile-dropdown">
+                            <div class="dropdown-item" data-action="profile">
+                                <i class="fas fa-user"></i> <span id="dropdown-profile">My Profile</span>
+                            </div>
+                            <div class="dropdown-item" data-action="settings">
+                                <i class="fas fa-cog"></i> <span id="dropdown-settings">Settings</span>
+                            </div>
+                            <div class="dropdown-item" data-action="language">
+                                <i class="fas fa-globe"></i> <span id="dropdown-language">Language</span>
+                            </div>
+                            <div class="dropdown-item" data-action="help">
+                                <i class="fas fa-question-circle"></i> <span id="dropdown-help">Help & Support</span>
+                            </div>
+                            <div class="dropdown-item" data-action="logout">
+                                <i class="fas fa-sign-out-alt"></i> <span id="dropdown-logout">Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="container" style="display: flex;">
+                <div class="nav-tab active" data-tab="overview" id="nav-overview">Overview</div>
+                <div class="nav-tab" data-tab="ledger" id="nav-ledger">Carbon Ledger</div>
+                <div class="nav-tab" data-tab="recommendations" id="nav-recommendations">AI Recommendations</div>
+                <div class="nav-tab" data-tab="data-sources" id="nav-data-sources">Data Sources</div>
+                <div class="nav-tab" data-tab="reports" id="nav-reports">Reports</div>
+                <div class="nav-tab" data-tab="profile" style="display: none;" id="profile-tab" id="nav-profile">My Profile</div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="container">
+            <!-- Overview Tab -->
+            <div class="tab-content active" id="overview">
+                <div class="net-carbon-score">
+                    <div class="score-label" id="score-label">Your Net Carbon Impact</div>
+                    <div class="score-value">+42</div>
+                    <div class="score-change"><i class="fas fa-arrow-up"></i> <span id="score-change">12 kg CO₂e saved this week</span></div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger);">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">128 kg</div>
+                            <div class="stat-label" id="debits-label">Carbon Debits</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: rgba(34, 197, 94, 0.1); color: var(--success);">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">170 kg</div>
+                            <div class="stat-label" id="credits-label">Carbon Credits</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.1); color: var(--secondary);">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">83%</div>
+                            <div class="stat-label" id="better-label">Better Than Average</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title" id="recent-activity">Recent Activity</div>
+                        <button class="btn" id="view-all-btn">View All</button>
+                    </div>
+                    
+                    <div class="transaction-list">
+                        <div class="transaction-item">
+                            <div class="transaction-icon" style="color: var(--success);">
+                                <i class="fas fa-train"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <div class="transaction-name">Train to Mumbai</div>
+                                <div class="transaction-date">Today, 09:24 AM</div>
+                            </div>
+                            <div class="transaction-amount" style="color: var(--success);">+8 kg</div>
+                        </div>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-icon" style="color: var(--danger);">
+                                <i class="fas fa-gas-pump"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <div class="transaction-name">Fuel Purchase</div>
+                                <div class="transaction-date">Yesterday, 05:32 PM</div>
+                            </div>
+                            <div class="transaction-amount" style="color: var(--danger);">-24 kg</div>
+                        </div>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-icon" style="color: var(--success);">
+                                <i class="fas fa-solar-panel"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <div class="transaction-name">Renewable Energy</div>
+                                <div class="transaction-date">Yesterday, 12:00 PM</div>
+                            </div>
+                            <div class="transaction-amount" style="color: var(--success);">+15 kg</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Carbon Ledger Tab -->
+            <div class="tab-content" id="ledger">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title" id="ledger-title">Your Carbon Ledger</div>
+                        <div>
+                            <span style="margin-right: 15px; font-weight: 600;" id="net-impact">Net: <span style="color: var(--success);">+42 kg CO₂e</span></span>
+                            <button class="btn" id="export-report-btn">Export Report</button>
+                        </div>
+                    </div>
+                    
+                    <div class="ledger-container">
+                        <div class="debit-ledger">
+                            <div class="ledger-header">
+                                <div class="ledger-title" id="debit-title">Carbon Debits</div>
+                                <div class="ledger-amount">128 kg</div>
+                            </div>
+                            
+                            <div class="transaction-list">
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--danger);">
+                                        <i class="fas fa-car"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Commute to Office</div>
+                                        <div class="transaction-date">Mon, Wed, Fri</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--danger);">-18 kg</div>
+                                </div>
+                                
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--danger);">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Non-veg Meals</div>
+                                        <div class="transaction-date">This week</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--danger);">-32 kg</div>
+                                </div>
+                                
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--danger);">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Home Electricity</div>
+                                        <div class="transaction-date">June 2023</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--danger);">-58 kg</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="credit-ledger">
+                            <div class="ledger-header">
+                                <div class="ledger-title" id="credit-title">Carbon Credits</div>
+                                <div class="ledger-amount">170 kg</div>
+                            </div>
+                            
+                            <div class="transaction-list">
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--success);">
+                                        <i class="fas fa-train"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Public Transport</div>
+                                        <div class="transaction-date">This month</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--success);">+42 kg</div>
+                                </div>
+                                
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--success);">
+                                        <i class="fas fa-solar-panel"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Solar Installation</div>
+                                        <div class="transaction-date">June 2023</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--success);">+65 kg</div>
+                                </div>
+                                
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--success);">
+                                        <i class="fas fa-leaf"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Plant-based Diet</div>
+                                        <div class="transaction-date">This month</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--success);">+38 kg</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Recommendations Tab -->
+            <div class="tab-content" id="recommendations">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title" id="recommendations-title">Personalized AI Recommendations</div>
+                        <div style="font-size: 14px; color: var(--gray);" id="recommendations-subtitle">Based on your spending and travel patterns</div>
+                    </div>
+                    
+                    <div class="recommendation-grid">
+                        <div class="recommendation-card">
+                            <div class="recommendation-header">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-bicycle"></i>
+                                </div>
+                                <div>
+                                    <div class="recommendation-title">Switch to E-Bike for Short Trips</div>
+                                    <div class="recommendation-impact">HIGH IMPACT: 12 kg CO₂e/month</div>
+                                </div>
+                            </div>
+                            <div class="recommendation-desc">
+                                We detected 8 short car trips (< 3km) this month. Switching to an e-bike would save emissions and money.
+                            </div>
+                            <button class="btn view-ebike-btn">View E-Bike Options</button>
+                        </div>
+                        
+                        <div class="recommendation-card">
+                            <div class="recommendation-header">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-thermometer-half"></i>
+                                </div>
+                                <div>
+                                    <div class="recommendation-title">Optimize AC Temperature</div>
+                                    <div class="recommendation-impact">MEDIUM IMPACT: 8 kg CO₂e/month</div>
+                                </div>
+                            </div>
+                            <div class="recommendation-desc">
+                                Your AC is set to 20°C during nights. Increasing to 24°C can reduce energy consumption by 18%.
+                            </div>
+                            <button class="btn setup-schedule-btn">Setup Smart Schedule</button>
+                        </div>
+                        
+                        <div class="recommendation-card">
+                            <div class="recommendation-header">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <div>
+                                    <div class="recommendation-title">Reduce Food Delivery Packaging</div>
+                                    <div class="recommendation-impact">MEDIUM IMPACT: 6 kg CO₂e/month</div>
+                                </div>
+                            </div>
+                            <div class="recommendation-desc">
+                                Choose "no cutlery" option in your 12 monthly food deliveries to reduce plastic waste.
+                            </div>
+                            <button class="btn update-settings-btn">Update App Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Sources Tab -->
+            <div class="tab-content" id="data-sources">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title" id="data-sources-title">Connected Data Sources</div>
+                        <div style="font-size: 14px; color: var(--gray);" id="data-sources-subtitle">Automatically tracking your carbon impact</div>
+                    </div>
+                    
+                    <div class="data-sources-grid">
+                        <div class="data-source-card">
+                            <div class="data-source-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="data-source-name">Bank Accounts</div>
+                            <div class="data-source-status">Connected</div>
+                            <div style="font-size: 12px; color: var(--gray); margin-top: 10px;">Tracking fuel, grocery & utility spends</div>
+                        </div>
+                        
+                        <div class="data-source-card">
+                            <div class="data-source-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="data-source-name">Phone Sensors</div>
+                            <div class="data-source-status">Active</div>
+                            <div style="font-size: 12px; color: var(--gray); margin-top: 10px;">Auto-detecting travel modes</div>
+                        </div>
+                        
+                        <div class="data-source-card">
+                            <div class="data-source-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="data-source-name">Smart Devices</div>
+                            <div class="data-source-status">2 Connected</div>
+                            <div style="font-size: 12px; color: var(--gray); margin-top: 10px;">Thermostat & smart plugs</div>
+                        </div>
+                        
+                        <div class="data-source-card">
+                            <div class="data-source-icon">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="data-source-name">E-Receipts</div>
+                            <div class="data-source-status">Active</div>
+                            <div style="font-size: 12px; color: var(--gray); margin-top: 10px;">Scanning digital purchase records</div>
+                        </div>
+                        
+                        <!-- Google Fit Integration Card -->
+                        <div class="data-source-card" id="google-fit-card">
+                            <div class="data-source-icon" style="background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            <div class="data-source-name">Google Fit</div>
+                            <div class="data-source-status" id="google-fit-status">Connect</div>
+                            <div style="font-size: 12px; color: var(--gray); margin-top: 10px;">Track walking, cycling & workouts</div>
+                            <button class="btn btn-outline" style="margin-top: 10px; width: 100%;" id="connect-google-fit">Connect Google Fit</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Google Fit Integration Section -->
+                <div class="google-fit-section" id="google-fit-section" style="display: none;">
+                    <div class="google-fit-card">
+                        <div class="card-header">
+                            <div class="card-title">Google Fit Integration</div>
+                            <div style="font-size: 14px; color: var(--gray);">Tracking your physical activity for carbon credits</div>
+                        </div>
+                        
+                        <div class="fit-status">
+                            <div class="fit-icon">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            <div class="fit-info">
+                                <div style="font-weight: 600; font-size: 18px;">Google Fit Connected</div>
+                                <div style="color: var(--success); font-weight: 500;">Syncing your activity data</div>
+                                <div style="font-size: 14px; color: var(--gray); margin-top: 5px;">Last synced: <span id="last-sync">Just now</span></div>
+                            </div>
+                            <button class="btn btn-outline" id="disconnect-google-fit">Disconnect</button>
+                        </div>
+                        
+                        <div class="fit-stats">
+                            <div class="fit-stat">
+                                <div class="fit-stat-value" id="steps-today">8,542</div>
+                                <div class="fit-stat-label">Steps Today</div>
+                            </div>
+                            <div class="fit-stat">
+                                <div class="fit-stat-value" id="calories-today">412</div>
+                                <div class="fit-stat-label">Calories Burned</div>
+                            </div>
+                            <div class="fit-stat">
+                                <div class="fit-stat-value" id="active-minutes">68</div>
+                                <div class="fit-stat-label">Active Minutes</div>
+                            </div>
+                            <div class="fit-stat">
+                                <div class="fit-stat-value" id="carbon-credits-from-fit">+5.2</div>
+                                <div class="fit-stat-label">Carbon Credits (kg)</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <h3 style="margin-bottom: 10px;">Recent Activities</h3>
+                            <div class="transaction-list">
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--success);">
+                                        <i class="fas fa-walking"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Morning Walk</div>
+                                        <div class="transaction-date">Today, 07:30 AM • 35 mins</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--success);">+0.8 kg</div>
+                                </div>
+                                
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--success);">
+                                        <i class="fas fa-bicycle"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Cycling</div>
+                                        <div class="transaction-date">Yesterday, 06:15 PM • 25 mins</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--success);">+1.2 kg</div>
+                                </div>
+                                
+                                <div class="transaction-item">
+                                    <div class="transaction-icon" style="color: var(--success);">
+                                        <i class="fas fa-running"></i>
+                                    </div>
+                                    <div class="transaction-details">
+                                        <div class="transaction-name">Evening Run</div>
+                                        <div class="transaction-date">June 23, 06:45 PM • 42 mins</div>
+                                    </div>
+                                    <div class="transaction-amount" style="color: var(--success);">+1.5 kg</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Tab -->
+            <div class="tab-content" id="reports">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title" id="reports-title">Carbon Reports</div>
+                        <div class="report-actions">
+                            <button class="btn" id="weekly-report">Weekly</button>
+                            <button class="btn btn-outline" id="monthly-report">Monthly</button>
+                            <button class="btn btn-outline" id="yearly-report">Yearly</button>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="carbonChart"></canvas>
+                    </div>
+                    
+                    <div class="report-info">
+                        <div class="report-info-item">
+                            <div class="report-info-label" id="report-period-label">Report Period</div>
+                            <div style="color: var(--gray);" id="report-period">June 18 - June 24, 2023</div>
+                        </div>
+                        <div class="report-info-item">
+                            <div class="report-info-label" id="report-impact-label">Net Carbon Impact</div>
+                            <div style="color: var(--success); font-weight: 700;" id="report-impact">+42 kg CO₂e</div>
+                        </div>
+                        <div class="report-info-item">
+                            <div class="report-info-label" id="report-status-label">Status</div>
+                            <div style="color: var(--success);" id="report-status">15% Better Than Last Week</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Tab -->
+            <div class="tab-content" id="profile">
+                <div class="profile-container">
+                    <div class="profile-sidebar">
+                        <div class="profile-card">
+                            <div class="profile-avatar" id="profile-avatar"></div>
+                            <div class="profile-name" id="profile-display-name">Richa Kumari</div>
+                            <div class="profile-bio" id="profile-bio">Environmental Advocate</div>
+                            <button class="btn btn-block" id="edit-profile-btn">Edit Profile</button>
+                            
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">42</div>
+                                    <div class="profile-stat-label">Net Impact</div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">83%</div>
+                                    <div class="profile-stat-label">Better Than Avg</div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">28</div>
+                                    <div class="profile-stat-label">Active Days</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-title">Contact Information</div>
+                            <div class="contact-info">
+                                <div class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span id="contact-email">richa.kumari@nitmanipur.ac.in</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span id="contact-phone">+91 93416 29878</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span id="contact-location">NIT Manipur, Imphal, India</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-main">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Personal Information</div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group-half">
+                                    <label>First Name</label>
+                                    <input type="text" class="form-control" id="first-name" value="Richa" readonly>
+                                </div>
+                                <div class="form-group-half">
+                                    <label>Last Name</label>
+                                    <input type="text" class="form-control" id="last-name" value="Kumari" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <input type="date" class="form-control" id="dob" value="2005-01-03" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Bio</label>
+                                <textarea class="form-control" id="bio" rows="3" readonly>Environmental advocate and sustainability enthusiast. Committed to reducing my carbon footprint and inspiring others to do the same.</textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Language Section -->
+                        <div class="language-section">
+                            <div class="language-card">
+                                <div class="card-header">
+                                    <div class="card-title">Language Preferences</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Select App Language</label>
+                                    <div class="language-selector">
+                                        <div class="language-option active" data-lang="en">English</div>
+                                        <div class="language-option" data-lang="hi">Hindi</div>
+                                        <div class="language-option" data-lang="ta">Tamil</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Measurement Units</label>
+                                    <div>
+                                        <input type="radio" id="metric" name="units" checked>
+                                        <label for="metric">Metric (kg, km)</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="imperial" name="units">
+                                        <label for="imperial">Imperial (lbs, miles)</label>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-top: 20px;">
+                                    <button class="btn" id="save-language-btn">Save Language Preferences</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <div class="logo" style="margin-bottom: 20px;">
+                            <div class="logo-icon"><i class="fas fa-seedling"></i></div>
+                            <div class="logo-text">Carbon Ledger</div>
+                        </div>
+                        <div class="tech-team" style="margin-bottom: 10px;">HackHills</div>
+                        <div class="institution" style="margin-bottom: 15px;">NIT Manipur</div>
+                        <p>Making sustainable living effortless through automation and AI.</p>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <div class="footer-heading">Product</div>
+                        <div class="footer-links">
+                            <a href="#">Features</a>
+                            <a href="#">Pricing</a>
+                            <a href="#">API</a>
+                            <a href="#">Integrations</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <div class="footer-heading">Company</div>
+                        <div class="footer-links">
+                            <a href="#">About</a>
+                            <a href="#">Blog</a>
+                            <a href="#">Careers</a>
+                            <a href="#">Contact</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <div class="footer-heading">Contact Us</div>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>NIT Manipur, Imphal, India</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+91 93416 29878</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>contact@nitmanipur.ac.in</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="copyright">
+                    &copy; 2025 Carbon Ledger. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="edit-profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Edit Profile</div>
+                <button class="modal-close" id="close-edit-modal">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label>Profile Picture</label>
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div class="user-avatar" id="modal-avatar" style="width: 60px; height: 60px; margin-right: 15px;">RK</div>
+                    <button class="btn btn-outline">Upload New</button>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group-half">
+                    <label>First Name</label>
+                    <input type="text" class="form-control" id="modal-first-name" value="Richa">
+                </div>
+                <div class="form-group-half">
+                    <label>Last Name</label>
+                    <input type="text" class="form-control" id="modal-last-name" value="Kumari">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Date of Birth</label>
+                <input type="date" class="form-control" id="modal-dob" value="2005-01-03">
+            </div>
+            
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea class="form-control" id="modal-bio" rows="3">Environmental advocate and sustainability enthusiast. Committed to reducing my carbon footprint and inspiring others to do the same.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" id="modal-email" value="richa.kumari@nitmanipur.ac.in">
+            </div>
+            
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" class="form-control" id="modal-phone" value="+91 93416 29878">
+            </div>
+            
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" class="form-control" id="modal-location" value="NIT Manipur, Imphal, India">
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn" id="save-profile-btn">Save Changes</button>
+                <button class="btn btn-outline" id="cancel-edit-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="success-modal">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="success-title" id="success-title">Report Sent Successfully!</div>
+            <div class="success-message" id="success-message">
+                Your carbon footprint report has been sent to your WhatsApp and email address.
+            </div>
+            <button class="btn" id="success-ok-btn">OK</button>
+        </div>
+    </div>
+
+    <!-- E-Bike Options Modal -->
+    <div class="modal" id="ebike-modal">
+        <div class="recommendation-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">E-Bike Options & Recommendations</div>
+                <button class="modal-close" id="close-ebike-modal">&times;</button>
+            </div>
+            
+            <p>Based on your location and travel patterns, here are the best e-bike options for your short trips:</p>
+            
+            <div class="app-grid">
+                <div class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="app-name">Ola Electric</div>
+                    <div class="app-desc">Range: 120 km | Speed: 85 km/h</div>
+                    <button class="btn btn-outline" style="margin-top: 10px;">View Details</button>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-bicycle"></i>
+                    </div>
+                    <div class="app-name">Ather Energy</div>
+                    <div class="app-desc">Range: 110 km | Fast Charging</div>
+                    <button class="btn btn-outline" style="margin-top: 10px;">View Details</button>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="app-name">Hero Electric</div>
+                    <div class="app-desc">Range: 85 km | Affordable</div>
+                    <button class="btn btn-outline" style="margin-top: 10px;">View Details</button>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-battery-full"></i>
+                    </div>
+                    <div class="app-name">Revolt Motors</div>
+                    <div class="app-desc">Range: 150 km | AI Features</div>
+                    <button class="btn btn-outline" style="margin-top: 10px;">View Details</button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px;">
+                <h3>Benefits of Switching to E-Bike:</h3>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Save approximately ₹2,500 per month on fuel</li>
+                    <li>Reduce carbon emissions by 12 kg CO₂e monthly</li>
+                    <li>Avoid traffic congestion with lane filtering</li>
+                    <li>Free parking in most city areas</li>
+                    <li>Government subsidies available up to ₹15,000</li>
+                </ul>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button class="btn" id="schedule-test-ride">Schedule Test Ride</button>
+                <button class="btn btn-outline" id="close-ebike-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smart Schedule Modal -->
+    <div class="modal" id="schedule-modal">
+        <div class="recommendation-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Smart AC Schedule Setup</div>
+                <button class="modal-close" id="close-schedule-modal">&times;</button>
+            </div>
+            
+            <p>Optimize your AC usage with these smart scheduling recommendations:</p>
+            
+            <div style="margin-top: 20px;">
+                <h3>Recommended Temperature Schedule:</h3>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>10:00 PM - 6:00 AM (Sleeping)</span>
+                        <span style="font-weight: 600;">24°C</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>6:00 AM - 9:00 AM (Morning)</span>
+                        <span style="font-weight: 600;">26°C</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>9:00 AM - 6:00 PM (Away)</span>
+                        <span style="font-weight: 600;">OFF</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>6:00 PM - 10:00 PM (Evening)</span>
+                        <span style="font-weight: 600;">25°C</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px;">
+                <h3>Compatible Smart Thermostats:</h3>
+                <div class="app-grid">
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
+                        <div class="app-name">Google Nest</div>
+                        <div class="app-desc">AI Learning | Energy Saving</div>
+                        <button class="btn btn-outline" style="margin-top: 10px;">View Details</button>
+                    </div>
+                    
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="app-name">Ecobee</div>
+                        <div class="app-desc">Room Sensors | Smart Alerts</div>
+                        <button class="btn btn-outline" style="margin-top: 10px;">View Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px;">
+                <h3>Expected Savings:</h3>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Reduce electricity consumption by 18%</li>
+                    <li>Save approximately ₹800 per month on electricity bills</li>
+                    <li>Reduce carbon emissions by 8 kg CO₂e monthly</li>
+                    <li>Extend AC lifespan by 2-3 years</li>
+                </ul>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button class="btn" id="apply-schedule">Apply This Schedule</button>
+                <button class="btn btn-outline" id="close-schedule-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="recommendation-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Food Delivery App Settings</div>
+                <button class="modal-close" id="close-settings-modal">&times;</button>
+            </div>
+            
+            <p>Update your food delivery app settings to reduce packaging waste:</p>
+            
+            <div style="margin-top: 20px;">
+                <h3>Recommended Settings for Popular Apps:</h3>
+                
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                    <h4>Swiggy</h4>
+                    <div style="margin: 10px 0;">
+                        <input type="checkbox" id="swiggy-cutlery" checked>
+                        <label for="swiggy-cutlery">No cutlery option</label>
+                    </div>
+                    <div style="margin: 10px 0;">
+                        <input type="checkbox" id="swiggy-plastic" checked>
+                        <label for="swiggy-plastic">Reduce plastic packaging</label>
+                    </div>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <h4>Zomato</h4>
+                    <div style="margin: 10px 0;">
+                        <input type="checkbox" id="zomato-cutlery" checked>
+                        <label for="zomato-cutlery">No cutlery option</label>
+                    </div>
+                    <div style="margin: 10px 0;">
+                        <input type="checkbox" id="zomato-plastic">
+                        <label for="zomato-plastic">Reduce plastic packaging</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px;">
+                <h3>Eco-Friendly Alternatives:</h3>
+                <div class="app-grid">
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="app-name">Home Cooking</div>
+                        <div class="app-desc">Healthier & Sustainable</div>
+                        <button class="btn btn-outline" style="margin-top: 10px;">Get Recipes</button>
+                    </div>
+                    
+                    <div class="app-card">
+                        <div class="app-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="app-name">Eco-Packaging</div>
+                        <div class="app-desc">Biodegradable Options</div>
+                        <button class="btn btn-outline" style="margin-top: 10px;">Learn More</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px;">
+                <h3>Environmental Impact:</h3>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Reduce plastic waste by 1.2 kg per month</li>
+                    <li>Save 6 kg CO₂e monthly from reduced packaging</li>
+                    <li>Support restaurants with eco-friendly practices</li>
+                    <li>Get green rewards points for sustainable choices</li>
+                </ul>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button class="btn" id="apply-settings">Apply These Settings</button>
+                <button class="btn btn-outline" id="close-settings-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity List Modal -->
+    <div class="modal" id="activity-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">All Activities - Last 7 Days</div>
+                <button class="modal-close" id="close-activity-modal">&times;</button>
+            </div>
+            
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--success);">
+                        <i class="fas fa-train"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-name">Train to Mumbai</div>
+                        <div class="activity-date">Today, 09:24 AM</div>
+                    </div>
+                    <div class="activity-amount" style="color: var(--success);">+8 kg</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--danger);">
+                        <i class="fas fa-gas-pump"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-name">Fuel Purchase</div>
+                        <div class="activity-date">Yesterday, 05:32 PM</div>
+                    </div>
+                    <div class="activity-amount" style="color: var(--danger);">-24 kg</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--success);">
+                        <i class="fas fa-solar-panel"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-name">Renewable Energy</div>
+                        <div class="activity-date">Yesterday, 12:00 PM</div>
+                    </div>
+                    <div class="activity-amount" style="color: var(--success);">+15 kg</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--success);">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-name">Bus to College</div>
+                        <div class="activity-date">June 23, 08:15 AM</div>
+                    </div>
+                    <div class="activity-amount" style="color: var(--success);">+5 kg</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--danger);">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-name">Online Shopping Delivery</div>
+                        <div class="activity-date">June 22, 03:45 PM</div>
+                    </div>
+                    <div class="activity-amount" style="color: var(--danger);">-12 kg</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--success);">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-name">Plant-based Meals</div>
+                        <div class="activity-date">June 22, All Day</div>
+                    </div>
+                    <div class="activity-amount" style="color: var(--success);">+6 kg</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--danger);">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-name">Weekend Drive</div>
+                        <div class="activity-date">June 21, 02:30 PM</div>
+                    </div>
+                    <div class="activity-amount" style="color: var(--danger);">-18 kg</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--success);">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-name">Recycling</div>
+                        <div class="activity-date">June 20, 10:00 AM</div>
+                    </div>
+                    <div class="activity-amount" style="color: var(--success);">+3 kg</div>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                <div>
+                    <div style="font-weight: 600;">Total Credits</div>
+                    <div style="color: var(--success); font-weight: 700;">+37 kg CO₂e</div>
+                </div>
+                <div>
+                    <div style="font-weight: 600;">Total Debits</div>
+                    <div style="color: var(--danger); font-weight: 700;">-54 kg CO₂e</div>
+                </div>
+                <div>
+                    <div style="font-weight: 600;">Net Impact</div>
+                    <div style="color: var(--success); font-weight: 700;">+42 kg CO₂e</div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button class="btn btn-outline" id="close-activity-btn">Back to Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language translations
+        const translations = {
+            en: {
+                // Login
+                "welcome": "Welcome Back",
+                "signin": "Sign in to your Carbon Ledger account",
+                "email": "Email Address",
+                "password": "Password",
+                "signin-btn": "Sign In",
+                "auto-login": "Auto-login with demo account in",
+                "seconds": "seconds",
+                
+                // Header
+                "net-positive": "Net Positive",
+                "my-profile": "My Profile",
+                "settings": "Settings",
+                "language": "Language",
+                "help": "Help & Support",
+                "logout": "Logout",
+                
+                // Navigation
+                "overview": "Overview",
+                "ledger": "Carbon Ledger",
+                "recommendations": "AI Recommendations",
+                "data-sources": "Data Sources",
+                "reports": "Reports",
+                
+                // Overview
+                "net-carbon-impact": "Your Net Carbon Impact",
+                "saved-this-week": "kg CO₂e saved this week",
+                "carbon-debits": "Carbon Debits",
+                "carbon-credits": "Carbon Credits",
+                "better-than-average": "Better Than Average",
+                "recent-activity": "Recent Activity",
+                "view-all": "View All",
+                
+                // Ledger
+                "your-carbon-ledger": "Your Carbon Ledger",
+                "net": "Net",
+                "export-report": "Export Report",
+                "debits": "Carbon Debits",
+                "credits": "Carbon Credits",
+                
+                // Recommendations
+                "personalized-recommendations": "Personalized AI Recommendations",
+                "based-on-patterns": "Based on your spending and travel patterns",
+                
+                // Data Sources
+                "connected-data-sources": "Connected Data Sources",
+                "automated-tracking": "Automatically tracking your carbon impact",
+                
+                // Reports
+                "carbon-reports": "Carbon Reports",
+                "weekly": "Weekly",
+                "monthly": "Monthly",
+                "yearly": "Yearly",
+                "report-period": "Report Period",
+                "net-carbon-impact-report": "Net Carbon Impact",
+                "status": "Status",
+                "better-than-last-week": "15% Better Than Last Week",
+                "better-than-last-month": "12% Better Than Last Month",
+                "better-than-last-year": "8% Better Than Last Year",
+                
+                // Success Modal
+                "report-sent": "Report Sent Successfully!",
+                "report-message": "Your carbon footprint report has been sent to your WhatsApp and email address.",
+                "ok": "OK"
+            },
+            hi: {
+                // Login
+                "welcome": "वापसी पर स्वागत है",
+                "signin": "अपने कार्बन लेजर खाते में साइन इन करें",
+                "email": "ईमेल पता",
+                "password": "पासवर्ड",
+                "signin-btn": "साइन इन",
+                "auto-login": "डेमो खाते के साथ ऑटो-लॉगिन",
+                "seconds": "सेकंड",
+                
+                // Header
+                "net-positive": "नेट पॉजिटिव",
+                "my-profile": "मेरी प्रोफाइल",
+                "settings": "सेटिंग्स",
+                "language": "भाषा",
+                "help": "सहायता और समर्थन",
+                "logout": "लॉगआउट",
+                
+                // Navigation
+                "overview": "अवलोकन",
+                "ledger": "कार्बन लेजर",
+                "recommendations": "एआई सिफारिशें",
+                "data-sources": "डेटा स्रोत",
+                "reports": "रिपोर्ट",
+                
+                // Overview
+                "net-carbon-impact": "आपका नेट कार्बन प्रभाव",
+                "saved-this-week": "किलो CO₂e इस सप्ताह बचाया",
+                "carbon-debits": "कार्बन डेबिट",
+                "carbon-credits": "कार्बन क्रेडिट",
+                "better-than-average": "औसत से बेहतर",
+                "recent-activity": "हाल की गतिविधि",
+                "view-all": "सभी देखें",
+                
+                // Ledger
+                "your-carbon-ledger": "आपका कार्बन लेजर",
+                "net": "नेट",
+                "export-report": "रिपोर्ट निर्यात करें",
+                "debits": "कार्बन डेबिट",
+                "credits": "कार्बन क्रेडिट",
+                
+                // Recommendations
+                "personalized-recommendations": "व्यक्तिगत एआई सिफारिशें",
+                "based-on-patterns": "आपके खर्च और यात्रा पैटर्न के आधार पर",
+                
+                // Data Sources
+                "connected-data-sources": "कनेक्टेड डेटा स्रोत",
+                "automated-tracking": "स्वचालित रूप से आपके कार्बन प्रभाव को ट्रैक करना",
+                
+                // Reports
+                "carbon-reports": "कार्बन रिपोर्ट",
+                "weekly": "साप्ताहिक",
+                "monthly": "मासिक",
+                "yearly": "वार्षिक",
+                "report-period": "रिपोर्ट अवधि",
+                "net-carbon-impact-report": "नेट कार्बन प्रभाव",
+                "status": "स्थिति",
+                "better-than-last-week": "पिछले सप्ताह से 15% बेहतर",
+                "better-than-last-month": "पिछले महीने से 12% बेहतर",
+                "better-than-last-year": "पिछले साल से 8% बेहतर",
+                
+                // Success Modal
+                "report-sent": "रिपोर्ट सफलतापूर्वक भेजी गई!",
+                "report-message": "आपकी कार्बन फुटप्रिंट रिपोर्ट आपके व्हाट्सएप और ईमेल पते पर भेज दी गई है।",
+                "ok": "ठीक है"
+            },
+            ta: {
+                // Login
+                "welcome": "மீண்டும் வரவேற்கிறோம்",
+                "signin": "உங்கள் கார்பன் லெட்ஜர் கணக்கில் உள்நுழைக",
+                "email": "மின்னஞ்சல் முகவரி",
+                "password": "கடவுச்சொல்",
+                "signin-btn": "உள்நுழைக",
+                "auto-login": "டெமோ கணக்குடன் தானியங்கி உள்நுழைதல்",
+                "seconds": "விநாடிகள்",
+                
+                // Header
+                "net-positive": "நிகர நேர்மறை",
+                "my-profile": "எனது சுயவிவரம்",
+                "settings": "அமைப்புகள்",
+                "language": "மொழி",
+                "help": "உதவி & ஆதரவு",
+                "logout": "வெளியேறு",
+                
+                // Navigation
+                "overview": "மேலோட்டம்",
+                "ledger": "கார்பன் லெட்ஜர்",
+                "recommendations": "AI பரிந்துரைகள்",
+                "data-sources": "தரவு மூலங்கள்",
+                "reports": "அறிக்கைகள்",
+                
+                // Overview
+                "net-carbon-impact": "உங்கள் நிகர கார்பன் தாக்கம்",
+                "saved-this-week": "கிலோ CO₂e இந்த வாரம் சேமிக்கப்பட்டது",
+                "carbon-debits": "கார்பன் பற்று",
+                "carbon-credits": "கார்பன் கடன்",
+                "better-than-average": "சராசரியை விட சிறந்தது",
+                "recent-activity": "சமீபத்திய செயல்பாடு",
+                "view-all": "அனைத்தையும் காட்டு",
+                
+                // Ledger
+                "your-carbon-ledger": "உங்கள் கார்பன் லெட்ஜர்",
+                "net": "நிகர",
+                "export-report": "அறிக்கையை ஏற்றுமதி செய்க",
+                "debits": "கார்பன் பற்று",
+                "credits": "கார்பன் கடன்",
+                
+                // Recommendations
+                "personalized-recommendations": "தனிப்பயனாக்கப்பட்ட AI பரிந்துரைகள்",
+                "based-on-patterns": "உங்கள் செலவு மற்றும் பயண முறைகளை அடிப்படையாகக் கொண்டது",
+                
+                // Data Sources
+                "connected-data-sources": "இணைக்கப்பட்ட தரவு மூலங்கள்",
+                "automated-tracking": "தானியங்கியாக உங்கள் கார்பன் தாக்கத்தை கண்காணிக்கிறது",
+                
+                // Reports
+                "carbon-reports": "கார்பன் அறிக்கைகள்",
+                "weekly": "வாராந்திர",
+                "monthly": "மாதாந்திர",
+                "yearly": "ஆண்டு",
+                "report-period": "அறிக்கை காலம்",
+                "net-carbon-impact-report": "நிகர கார்பன் தாக்கம்",
+                "status": "நிலை",
+                "better-than-last-week": "கடந்த வாரத்தை விட 15% சிறந்தது",
+                "better-than-last-month": "கடந்த மாதத்தை விட 12% சிறந்தது",
+                "better-than-last-year": "கடந்த ஆண்டை விட 8% சிறந்தது",
+                
+                // Success Modal
+                "report-sent": "அறிக்கை வெற்றிகரமாக அனுப்பப்பட்டது!",
+                "report-message": "உங்கள் கார்பன் பதிப்பு அறிக்கை உங்கள் WhatsApp மற்றும் மின்னஞ்சல் முகவரிக்கு அனுப்பப்பட்டது.",
+                "ok": "சரி"
+            }
+        };
+
+        // User data
+        const userData = {
+            firstName: "Richa",
+            lastName: "Kumari",
+            email: "richa.kumari@nitmanipur.ac.in",
+            phone: "+91 93416 29878",
+            location: "NIT Manipur, Imphal, India",
+            dob: "2005-01-03",
+            bio: "Environmental advocate and sustainability enthusiast. Committed to reducing my carbon footprint and inspiring others to do the same.",
+            avatar: "",
+            language: "en"
+        };
+
+        // Chart data for different time periods
+        const chartData = {
+            weekly: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Carbon Impact (kg CO₂e)',
+                    data: [12, 19, 8, 15, 12, 18, 10],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgb(16, 185, 129)',
+                    ],
+                    borderWidth: 2,
+                    tension: 0.4
+                }]
+            },
+            monthly: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Carbon Impact (kg CO₂e)',
+                    data: [45, 52, 38, 42],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgb(16, 185, 129)',
+                    ],
+                    borderWidth: 2,
+                    tension: 0.4
+                }]
+            },
+            yearly: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Carbon Impact (kg CO₂e)',
+                    data: [120, 190, 150, 180, 160, 175, 165, 190, 210, 195, 180, 200],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgb(16, 185, 129)',
+                    ],
+                    borderWidth: 2,
+                    tension: 0.4
+                }]
+            }
+        };
+
+        // Additional charts data
+        const impactChartData = {
+            labels: ['Transport', 'Diet', 'Energy', 'Shopping', 'Other'],
+            datasets: [{
+                label: 'Carbon Impact by Category',
+                data: [35, 25, 20, 15, 5],
+                backgroundColor: [
+                    'rgba(239, 68, 68, 0.7)',
+                    'rgba(34, 197, 94, 0.7)',
+                    'rgba(59, 130, 246, 0.7)',
+                    'rgba(168, 85, 247, 0.7)',
+                    'rgba(245, 158, 11, 0.7)'
+                ],
+                borderColor: [
+                    'rgb(239, 68, 68)',
+                    'rgb(34, 197, 94)',
+                    'rgb(59, 130, 246)',
+                    'rgb(168, 85, 247)',
+                    'rgb(245, 158, 11)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const categoryChartData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [
+                {
+                    label: 'Carbon Credits',
+                    data: [65, 59, 80, 81, 56, 72],
+                    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                    borderColor: 'rgb(34, 197, 94)',
+                    borderWidth: 2,
+                    tension: 0.4
+                },
+                {
+                    label: 'Carbon Debits',
+                    data: [28, 48, 40, 19, 86, 27],
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    borderColor: 'rgb(239, 68, 68)',
+                    borderWidth: 2,
+                    tension: 0.4
+                }
+            ]
+        };
+
+        // Chart configuration
+        let carbonChart, impactChart, categoryChart;
+        
+        // Current language
+        let currentLanguage = 'en';
+        
+        // Google Fit connection status
+        let googleFitConnected = false;
+        
+        // Auto-login countdown
+        let countdown = 11;
+        const countdownElement = document.getElementById('countdown');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                autoLogin();
+            }
+        }, 1000);
+        
+        // Manual login
+        document.getElementById('login-btn').addEventListener('click', function() {
+            clearInterval(countdownInterval);
+            autoLogin();
+        });
+        
+        // Auto-login function
+        function autoLogin() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            initializeDashboard();
+        }
+        
+        // Initialize dashboard
+        function initializeDashboard() {
+            // Initialize charts
+            initCharts('weekly');
+            
+            // Set up user profile
+            updateProfileDisplay();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Apply current language
+            applyLanguage(currentLanguage);
+        }
+        
+        // Initialize charts
+        function initCharts(period) {
+            const ctx = document.getElementById('carbonChart').getContext('2d');
+            const impactCtx = document.getElementById('impactChart').getContext('2d');
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            
+            if (carbonChart) {
+                carbonChart.destroy();
+            }
+            
+            carbonChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData[period],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Impact chart (pie chart)
+            impactChart = new Chart(impactCtx, {
+                type: 'pie',
+                data: impactChartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Category chart (line chart)
+            categoryChart = new Chart(categoryCtx, {
+                type: 'line',
+                data: categoryChartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Update report info based on period
+            updateReportInfo(period);
+        }
+        
+        // Update report information based on period
+        function updateReportInfo(period) {
+            const periodElement = document.getElementById('report-period');
+            const impactElement = document.getElementById('report-impact');
+            const statusElement = document.getElementById('report-status');
+            const t = translations[currentLanguage];
+            
+            switch(period) {
+                case 'weekly':
+                    periodElement.textContent = 'June 18 - June 24, 2023';
+                    impactElement.textContent = '+42 kg CO₂e';
+                    statusElement.textContent = t['better-than-last-week'];
+                    break;
+                case 'monthly':
+                    periodElement.textContent = 'June 1 - June 30, 2023';
+                    impactElement.textContent = '+168 kg CO₂e';
+                    statusElement.textContent = t['better-than-last-month'];
+                    break;
+                case 'yearly':
+                    periodElement.textContent = 'January - December 2023';
+                    impactElement.textContent = '+2015 kg CO₂e';
+                    statusElement.textContent = t['better-than-last-year'];
+                    break;
+            }
+        }
+        
+        // Update profile display with user data
+        function updateProfileDisplay() {
+            document.getElementById('user-name').textContent = `${userData.firstName} ${userData.lastName}`;
+            document.getElementById('profile-display-name').textContent = `${userData.firstName} ${userData.lastName}`;
+            document.getElementById('first-name').value = userData.firstName;
+            document.getElementById('last-name').value = userData.lastName;
+            document.getElementById('dob').value = userData.dob;
+            document.getElementById('bio').value = userData.bio;
+            document.getElementById('contact-email').textContent = userData.email;
+            document.getElementById('contact-phone').textContent = userData.phone;
+            document.getElementById('contact-location').textContent = userData.location;
+            
+            // Modal fields
+            document.getElementById('modal-first-name').value = userData.firstName;
+            document.getElementById('modal-last-name').value = userData.lastName;
+            document.getElementById('modal-dob').value = userData.dob;
+            document.getElementById('modal-bio').value = userData.bio;
+            document.getElementById('modal-email').value = userData.email;
+            document.getElementById('modal-phone').value = userData.phone;
+            document.getElementById('modal-location').value = userData.location;
+            
+            // Set avatar initials
+            const avatarInitials = userData.firstName.charAt(0) + userData.lastName.charAt(0);
+            document.getElementById('user-avatar').textContent = avatarInitials;
+            document.getElementById('profile-avatar').textContent = avatarInitials;
+            document.getElementById('modal-avatar').textContent = avatarInitials;
+        }
+        
+        // Apply language to the interface
+        function applyLanguage(lang) {
+            currentLanguage = lang;
+            const t = translations[lang];
+            
+            // Update login page if visible
+            if (document.getElementById('login-page').style.display !== 'none') {
+                document.querySelector('.login-form h2').textContent = t['welcome'];
+                document.querySelector('.login-form p').textContent = t['signin'];
+                document.getElementById('email').placeholder = t['email'];
+                document.getElementById('password').placeholder = t['password'];
+                document.getElementById('login-btn').textContent = t['signin-btn'];
+                document.getElementById('auto-login-timer').innerHTML = `${t['auto-login']} <span id="countdown">${countdown}</span> ${t['seconds']}`;
+            }
+            
+            // Update header
+            document.getElementById('user-status').textContent = `${t['net-positive']}: +42 kg CO₂e`;
+            document.getElementById('dropdown-profile').textContent = t['my-profile'];
+            document.getElementById('dropdown-settings').textContent = t['settings'];
+            document.getElementById('dropdown-language').textContent = t['language'];
+            document.getElementById('dropdown-help').textContent = t['help'];
+            document.getElementById('dropdown-logout').textContent = t['logout'];
+            
+            // Update navigation
+            document.getElementById('nav-overview').textContent = t['overview'];
+            document.getElementById('nav-ledger').textContent = t['ledger'];
+            document.getElementById('nav-recommendations').textContent = t['recommendations'];
+            document.getElementById('nav-data-sources').textContent = t['data-sources'];
+            document.getElementById('nav-reports').textContent = t['reports'];
+            document.getElementById('nav-profile').textContent = t['my-profile'];
+            
+            // Update overview
+            document.getElementById('score-label').textContent = t['net-carbon-impact'];
+            document.getElementById('score-change').textContent = `12 ${t['saved-this-week']}`;
+            document.getElementById('debits-label').textContent = t['carbon-debits'];
+            document.getElementById('credits-label').textContent = t['carbon-credits'];
+            document.getElementById('better-label').textContent = t['better-than-average'];
+            document.getElementById('recent-activity').textContent = t['recent-activity'];
+            document.getElementById('view-all-btn').textContent = t['view-all'];
+            
+            // Update ledger
+            document.getElementById('ledger-title').textContent = t['your-carbon-ledger'];
+            document.getElementById('net-impact').innerHTML = `${t['net']}: <span style="color: var(--success);">+42 kg CO₂e</span>`;
+            document.getElementById('export-report-btn').textContent = t['export-report'];
+            document.getElementById('debit-title').textContent = t['debits'];
+            document.getElementById('credit-title').textContent = t['credits'];
+            
+            // Update recommendations
+            document.getElementById('recommendations-title').textContent = t['personalized-recommendations'];
+            document.getElementById('recommendations-subtitle').textContent = t['based-on-patterns'];
+            
+            // Update data sources
+            document.getElementById('data-sources-title').textContent = t['connected-data-sources'];
+            document.getElementById('data-sources-subtitle').textContent = t['automated-tracking'];
+            
+            // Update reports
+            document.getElementById('reports-title').textContent = t['carbon-reports'];
+            document.getElementById('weekly-report').textContent = t['weekly'];
+            document.getElementById('monthly-report').textContent = t['monthly'];
+            document.getElementById('yearly-report').textContent = t['yearly'];
+            document.getElementById('report-period-label').textContent = t['report-period'];
+            document.getElementById('report-impact-label').textContent = t['net-carbon-impact-report'];
+            document.getElementById('report-status-label').textContent = t['status'];
+            
+            // Update success modal
+            document.getElementById('success-title').textContent = t['report-sent'];
+            document.getElementById('success-message').textContent = t['report-message'];
+            document.getElementById('success-ok-btn').textContent = t['ok'];
+            
+            // Update report info
+            updateReportInfo('weekly');
+        }
+        
+        // Google Fit API integration
+        function connectGoogleFit() {
+            // In a real implementation, this would use the Google Fit API
+            // For demo purposes, we'll simulate the connection
+            
+            // Show loading state
+            document.getElementById('google-fit-status').textContent = 'Connecting...';
+            document.getElementById('google-fit-status').style.color = 'var(--warning)';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                googleFitConnected = true;
+                
+                // Update UI
+                document.getElementById('google-fit-status').textContent = 'Connected';
+                document.getElementById('google-fit-status').style.color = 'var(--success)';
+                document.getElementById('connect-google-fit').textContent = 'Connected';
+                document.getElementById('connect-google-fit').disabled = true;
+                
+                // Show Google Fit section
+                document.getElementById('google-fit-section').style.display = 'block';
+                
+                // Update last sync time
+                document.getElementById('last-sync').textContent = 'Just now';
+                
+                // Simulate fetching fitness data
+                simulateGoogleFitData();
+                
+                alert('Google Fit connected successfully! Your fitness data is now being used to calculate carbon credits.');
+            }, 2000);
+        }
+        
+        function disconnectGoogleFit() {
+            googleFitConnected = false;
+            
+            // Update UI
+            document.getElementById('google-fit-status').textContent = 'Connect';
+            document.getElementById('google-fit-status').style.color = 'var(--success)';
+            document.getElementById('connect-google-fit').textContent = 'Connect Google Fit';
+            document.getElementById('connect-google-fit').disabled = false;
+            
+            // Hide Google Fit section
+            document.getElementById('google-fit-section').style.display = 'none';
+            
+            alert('Google Fit disconnected.');
+        }
+        
+        function simulateGoogleFitData() {
+            // Simulate fitness data
+            document.getElementById('steps-today').textContent = '8,542';
+            document.getElementById('calories-today').textContent = '412';
+            document.getElementById('active-minutes').textContent = '68';
+            document.getElementById('carbon-credits-from-fit').textContent = '+5.2';
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.nav-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show corresponding tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // User menu dropdown
+            document.getElementById('user-menu').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('profile-dropdown').classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                document.getElementById('profile-dropdown').classList.remove('active');
+            });
+            
+            // Profile dropdown actions
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    
+                    switch(action) {
+                        case 'profile':
+                            // Switch to profile tab
+                            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                            document.getElementById('profile-tab').classList.add('active');
+                            
+                            document.querySelectorAll('.tab-content').forEach(content => {
+                                content.classList.remove('active');
+                            });
+                            document.getElementById('profile').classList.add('active');
+                            
+                            document.getElementById('profile-dropdown').classList.remove('active');
+                            break;
+                            
+                        case 'logout':
+                            // Logout action
+                            document.getElementById('dashboard').style.display = 'none';
+                            document.getElementById('login-page').style.display = 'flex';
+                            // Reset countdown
+                            countdown = 11;
+                            countdownElement.textContent = countdown;
+                            break;
+                            
+                        case 'language':
+                            // Switch to profile tab with language section
+                            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                            document.getElementById('profile-tab').classList.add('active');
+                            
+                            document.querySelectorAll('.tab-content').forEach(content => {
+                                content.classList.remove('active');
+                            });
+                            document.getElementById('profile').classList.add('active');
+                            
+                            document.getElementById('profile-dropdown').classList.remove('active');
+                            
+                            // Scroll to language section
+                            setTimeout(() => {
+                                document.querySelector('.language-section').scrollIntoView({ behavior: 'smooth' });
+                            }, 300);
+                            break;
+                            
+                        case 'settings':
+                            // Show settings
+                            alert('App settings would open here');
+                            break;
+                            
+                        case 'help':
+                            // Show help
+                            alert('Help and support would open here');
+                            break;
+                    }
+                });
+            });
+            
+            // Report period buttons
+            document.getElementById('weekly-report').addEventListener('click', function() {
+                document.getElementById('weekly-report').classList.remove('btn-outline');
+                document.getElementById('monthly-report').classList.add('btn-outline');
+                document.getElementById('yearly-report').classList.add('btn-outline');
+                initCharts('weekly');
+            });
+            
+            document.getElementById('monthly-report').addEventListener('click', function() {
+                document.getElementById('weekly-report').classList.add('btn-outline');
+                document.getElementById('monthly-report').classList.remove('btn-outline');
+                document.getElementById('yearly-report').classList.add('btn-outline');
+                initCharts('monthly');
+            });
+            
+            document.getElementById('yearly-report').addEventListener('click', function() {
+                document.getElementById('weekly-report').classList.add('btn-outline');
+                document.getElementById('monthly-report').classList.add('btn-outline');
+                document.getElementById('yearly-report').classList.remove('btn-outline');
+                initCharts('yearly');
+            });
+            
+            // Edit profile button
+            document.getElementById('edit-profile-btn').addEventListener('click', function() {
+                document.getElementById('edit-profile-modal').classList.add('active');
+            });
+            
+            // Close edit profile modal
+            document.getElementById('close-edit-modal').addEventListener('click', function() {
+                document.getElementById('edit-profile-modal').classList.remove('active');
+            });
+            
+            document.getElementById('cancel-edit-btn').addEventListener('click', function() {
+                document.getElementById('edit-profile-modal').classList.remove('active');
+            });
+            
+            // Save profile changes
+            document.getElementById('save-profile-btn').addEventListener('click', function() {
+                // Update user data
+                userData.firstName = document.getElementById('modal-first-name').value;
+                userData.lastName = document.getElementById('modal-last-name').value;
+                userData.dob = document.getElementById('modal-dob').value;
+                userData.bio = document.getElementById('modal-bio').value;
+                userData.email = document.getElementById('modal-email').value;
+                userData.phone = document.getElementById('modal-phone').value;
+                userData.location = document.getElementById('modal-location').value;
+                
+                // Update display
+                updateProfileDisplay();
+                
+                // Close modal
+                document.getElementById('edit-profile-modal').classList.remove('active');
+                
+                // Show success message
+                alert('Profile updated successfully!');
+            });
+            
+            // Language selection
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.language-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    userData.language = this.getAttribute('data-lang');
+                    applyLanguage(userData.language);
+                });
+            });
+            
+            // Save language preferences
+            document.getElementById('save-language-btn').addEventListener('click', function() {
+                alert('Language preferences saved successfully!');
+            });
+            
+            // Export report button
+            document.getElementById('export-report-btn').addEventListener('click', function() {
+                document.getElementById('success-modal').classList.add('active');
+            });
+            
+            // Close success modal
+            document.getElementById('success-ok-btn').addEventListener('click', function() {
+                document.getElementById('success-modal').classList.remove('active');
+            });
+            
+            // View All Activities button
+            document.getElementById('view-all-btn').addEventListener('click', function() {
+                document.getElementById('activity-modal').classList.add('active');
+            });
+            
+            // Close activity modal
+            document.getElementById('close-activity-modal').addEventListener('click', function() {
+                document.getElementById('activity-modal').classList.remove('active');
+            });
+            
+            document.getElementById('close-activity-btn').addEventListener('click', function() {
+                document.getElementById('activity-modal').classList.remove('active');
+            });
+            
+            // AI Recommendation buttons
+            document.querySelectorAll('.view-ebike-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('ebike-modal').classList.add('active');
+                });
+            });
+            
+            document.querySelectorAll('.setup-schedule-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('schedule-modal').classList.add('active');
+                });
+            });
+            
+            document.querySelectorAll('.update-settings-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('settings-modal').classList.add('active');
+                });
+            });
+            
+            // Close AI recommendation modals
+            document.getElementById('close-ebike-modal').addEventListener('click', function() {
+                document.getElementById('ebike-modal').classList.remove('active');
+            });
+            
+            document.getElementById('close-ebike-btn').addEventListener('click', function() {
+                document.getElementById('ebike-modal').classList.remove('active');
+            });
+            
+            document.getElementById('close-schedule-modal').addEventListener('click', function() {
+                document.getElementById('schedule-modal').classList.remove('active');
+            });
+            
+            document.getElementById('close-schedule-btn').addEventListener('click', function() {
+                document.getElementById('schedule-modal').classList.remove('active');
+            });
+            
+            document.getElementById('close-settings-modal').addEventListener('click', function() {
+                document.getElementById('settings-modal').classList.remove('active');
+            });
+            
+            document.getElementById('close-settings-btn').addEventListener('click', function() {
+                document.getElementById('settings-modal').classList.remove('active');
+            });
+            
+            // Apply buttons in AI recommendation modals
+            document.getElementById('schedule-test-ride').addEventListener('click', function() {
+                alert('Test ride scheduled! Our representative will contact you within 24 hours.');
+                document.getElementById('ebike-modal').classList.remove('active');
+            });
+            
+            document.getElementById('apply-schedule').addEventListener('click', function() {
+                alert('Smart AC schedule applied successfully!');
+                document.getElementById('schedule-modal').classList.remove('active');
+            });
+            
+            document.getElementById('apply-settings').addEventListener('click', function() {
+                alert('Food delivery app settings updated successfully!');
+                document.getElementById('settings-modal').classList.remove('active');
+            });
+            
+            // Google Fit integration
+            document.getElementById('connect-google-fit').addEventListener('click', function() {
+                connectGoogleFit();
+            });
+            
+            document.getElementById('disconnect-google-fit').addEventListener('click', function() {
+                disconnectGoogleFit();
+            });
+        }
+    </script>
+</body>
+</html>
