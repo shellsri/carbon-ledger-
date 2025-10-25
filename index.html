@@ -6,43 +6,20 @@
     <title>Carbon Ledger | Your Personal Carbon Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style> 
-	:root {
-    --primary: #10b981;
-    --primary-dark: #059669;
-    --secondary: #3b82f6;
-    --accent: #8b5cf6;
-    --light: #f0fdf4;
-    --dark: #064e3b;
-    --gray: #6b7280;
-    --danger: #ef4444;
-    --success: #22c55e;
-    --warning: #f59e0b;
-}
-
-/* 🌗 Dark Theme */
-:root[data-theme="dark"] {
-    --primary: #0ea5e9;
-    --primary-dark: #0284c7;
-    --secondary: #8b5cf6;
-    --accent: #10b981;
-    --light: #1e293b;
-    --dark: #f8fafc;
-    --gray: #94a3b8;
-    --danger: #f87171;
-    --success: #4ade80;
-    --warning: #facc15;
-
-    background-color: #0f172a;
-    color: #f1f5f9;
-}
-
-body[data-theme="dark"],
-[data-theme="dark"] body {
-    background-color: #0f172a;
-    color: #f1f5f9;
-}
-      
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --accent: #8b5cf6;
+            --light: #f0fdf4;
+            --dark: #064e3b;
+            --gray: #6b7280;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -1148,7 +1125,49 @@ body[data-theme="dark"],
                 gap: 10px;
             }
         }
-    </style>
+    
+[data-theme="dark"] {
+  --primary: #10b981;
+  --primary-dark: #059669;
+  --secondary: #3b82f6;
+  --accent: #8b5cf6;
+  --light: #1e293b;
+  --dark: #0f172a;
+  --gray: #94a3b8;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .chart-container,
+[data-theme="dark"] .data-source-card,
+[data-theme="dark"] .profile-card {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  box-shadow: 0 2px 10px rgba(255,255,255,0.05);
+}
+
+[data-theme="dark"] .header,
+[data-theme="dark"] .nav-tabs,
+[data-theme="dark"] .footer {
+  background-color: #1e293b;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .nav-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+</style>
 </head>
 <body>
     <!-- Login Page -->
@@ -1188,23 +1207,18 @@ body[data-theme="dark"],
     <!-- Dashboard -->
     <div class="dashboard" id="dashboard">
         <!-- Header -->
-     <div class="header">
-  <div class="container">
-    <div class="header-content">
-      <div class="logo" style="display: flex; align-items: center; gap: 10px;">
-        <div class="logo-icon"><i class="fas fa-seedling"></i></div>
-        <div class="logo-text" id="logo-text">Carbon Ledger</div>
-
-        <!-- 🌗 Theme Toggle Button -->
-        <button id="theme-toggle"
-                class="btn btn-outline"
-                style="padding: 6px 10px; border-radius: 50%; font-size: 18px;">
-          <i class="fas fa-moon"></i>
-        </button>
-      </div>
-
+        <div class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon"><i class="fas fa-seedling"></i></div>
+                        <div class="logo-text" id="logo-text">Carbon Ledger</div>
+                    </div>
                     
-                    <div class="user-menu" id="user-menu">
+                    <button id="theme-toggle" style="background:none;border:none;font-size:20px;cursor:pointer;margin-right:10px;">
+  <i class="fas fa-moon"></i>
+</button>
+<div class="user-menu" id="user-menu">
                         <div class="user-avatar" id="user-avatar">RK</div>
                         <div>
                             <div style="font-weight: 600;" id="user-name">Richa Kumari</div>
@@ -3139,22 +3153,23 @@ body[data-theme="dark"],
                 disconnectGoogleFit();
             });
         }
+    </script>
+
+<script>
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.documentElement;
   const themeToggle = document.getElementById("theme-toggle");
-
-  // Load saved theme
   const savedTheme = localStorage.getItem("theme") || "light";
   root.setAttribute("data-theme", savedTheme);
-  if (savedTheme === "dark") themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-
-  // Toggle theme
+  themeToggle.innerHTML =
+    savedTheme === "dark" ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
   themeToggle.addEventListener("click", () => {
     const current = root.getAttribute("data-theme");
     const next = current === "light" ? "dark" : "light";
     root.setAttribute("data-theme", next);
     localStorage.setItem("theme", next);
-    themeToggle.innerHTML = next === "light" ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+    themeToggle.innerHTML =
+      next === "light" ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
   });
 });
 </script>
