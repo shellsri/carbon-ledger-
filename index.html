@@ -1167,6 +1167,80 @@
   border-bottom-color: var(--primary);
 }
 
+        html[data-theme="dark"], 
+html[data-theme="light"] {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+[data-theme="dark"] body,
+[data-theme="dark"] .container {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .chart-container,
+[data-theme="dark"] .data-source-card,
+[data-theme="dark"] .profile-card,
+[data-theme="dark"] .recommendation-card {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid #334155;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .header,
+[data-theme="dark"] .nav-tabs {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .footer {
+  background-color: #111827;
+  border-top: 1px solid #334155;
+}
+
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .transaction-item,
+[data-theme="dark"] .fit-stat {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid #334155;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  border: 1px solid #334155;
+}
+
+[data-theme="dark"] .nav-tab {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .nav-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+[data-theme="dark"] .btn-outline {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+[data-theme="dark"] .btn-outline:hover {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+[data-theme="dark"] canvas {
+  background-color: #1e293b !important;
+}
+
+
 </style>
 </head>
 <body>
